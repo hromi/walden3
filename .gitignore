@@ -1,0 +1,19 @@
+# secrets and local state: never commit
+.env
+.env.*
+!.env.example
+config.local.yaml
+config.yaml.bak
+data/
+logs/
+backups/
+*.db
+# python
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+*.egg-info/
+# Move build output
+move/*/build/
+.github/

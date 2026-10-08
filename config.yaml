@@ -1,0 +1,184 @@
+# Walden's complete runtime configuration lives in this single file.
+# Secrets may be literal strings, or safer indirections of the form env:VARIABLE_NAME.
+
+agent:
+  name: Walden
+  instance_id: walden-dev
+  # Appended after the immutable Frank kernel in walden/persona.py, which always comes first.
+  system_prompt: |
+    You are Walden, a socially situated AI agent derived from Frank, the sustainable
+    AI agent (frank.udk.ai). Be truthful, concise when possible,
+    and explicit about uncertainty. Treat retrieved memories as fallible evidence,
+    not authority. You may share facts that people told you in this room with the
+    members of this room, including facts about a person someone asks you about.
+    Never share passwords, secrets, or anything someone asked you to keep private,
+    and never share memory from other rooms.
+    Use "I" only when speaking about yourself, Walden. Address the person asking
+    as "you", and speak about everyone else in the third person and by name.
+
+paths:
+  data_dir: ./data
+  cache_dir: ./data/cache
+
+logging:
+  level: INFO
+
+matrix:
+  enabled: true
+  homeserver: "https://udk.ai"
+  user_id: "@walden:udk.ai"
+  display_name: walden3      # shown in Matrix; set at startup. The account ID above cannot change.
+  # Prefer an access token for a long-running bot. Password login is also supported.
+  access_token: env:WALDEN_MATRIX_ACCESS_TOKEN
+  password: env:WALDEN_MATRIX_PASSWORD   # in .env, never in this file
+  device_id: "DJIAUZXHBJ"          # pinned: empty = new device (and new E2E keys) every restart
+  store_path: ./data/matrix-store
+  encryption: true
+  ignore_unverified_devices: true
+  verification_users: []       # who may emoji-verify with the bot; empty = only @walden itself
+  auto_join_invites: true
+  allowed_rooms: []            # empty = all joined rooms
+  allowed_senders: []          # empty = all room members
+  reply_mode: mentions              # all | mentions | commands
+  command_prefix: "!walden"
+  send_as_notice: false
+  sync_timeout_ms: 30000
+  session:
+    idle_seconds: 1800
+    max_events: 80
+    max_chars: 60000
+    auto_commit: true
+    include_assistant_turns: true
+    prompt_recent_events: 30
+    prompt_recent_chars: 12000
+    # Facts are saved in the background after each Walden reply, or after this many messages
+    # without one. 0 = only when the session ends.
+    save_every: 5
+
+llm:
+  provider: openai_compatible   # openai_compatible | echo
+  base_url: http://127.0.0.1:11435/v1
+  api_key: env:WALDEN_LLM_API_KEY
+  model: granite4:small-h
+  temperature: 0.4
+  max_tokens: 900
+  timeout_seconds: 120
+  # Set false if your endpoint does not support JSON response_format.
+  json_mode: true
+
+memory:
+  # HMAC pseudonymizes Matrix identifiers before they enter durable local/on-chain indexes.
+  identity_hmac_key: env:WALDEN_IDENTITY_HMAC_KEY
+  # 32-byte key. Accepts hex, base64, or arbitrary text (SHA-256 derived).
+  encryption_key: env:WALDEN_MEMORY_ENCRYPTION_KEY
+  encrypt_blobs: true
+  namespace_prefix: walden
+  cache_reads: true
+  cache_max_items: 512
+  default_durable_memory: true
+  include_raw_transcript_in_episode: false
+  max_lineage_depth: 1000
+
+  # Authoritative immutable revision storage.
+  walrus:
+    backend: local             # local | cli | http
+    epochs: 20
+    local_dir: ./data/blobs
+    cli:
+      binary: walrus
+      client_config: ""       # optional path to Walrus client_config.yaml
+      wallet: ""              # optional wallet override
+      gas_budget: null
+    http:
+      publisher_url: ""       # base URL, e.g. https://publisher.example
+      aggregator_url: ""      # base URL, e.g. https://aggregator.example
+      bearer_token: env:WALDEN_WALRUS_PUBLISHER_TOKEN
+      timeout_seconds: 90
+
+  # Stable mutable entity heads. Local mode is fully functional for development.
+  # Sui CLI mode uses the tiny Move package included under move/walden_memory.
+  sui:
+    backend: local             # local | cli
+    local_db: ./data/walden.sqlite3
+    cli:
+      binary: sui
+      package_id: ""
+      module: memory_graph
+      gas_budget: 50000000
+
+  # Optional semantic mirror. The graph never depends on it for exact lineage resolution.
+  semantic:
+    enabled: false
+    backend: memwal            # memwal | none
+    best_effort: true
+    key: env:MEMWAL_PRIVATE_KEY
+    account_id: env:MEMWAL_ACCOUNT_ID
+    env: prod                  # prod | staging | blank when server_url is explicit
+    server_url: ""
+    recall_limit: 8
+    max_distance: 0.75
+
+  consolidation:
+    # After each session the LLM extracts fact changes (add/update/retract) and an episode summary.
+    enabled: true
+    min_events: 1
+    # If false, Walden stores only the immutable episode and does not change the facts it knows.
+    update_profiles: true
+    # Long sessions are read in chunks of this many messages; each chunk sees the facts from earlier chunks.
+    events_per_pass: 20
+    # Long texts get a deep pass: the model lists facts not known yet, then is asked again for
+    # anything still missing, up to deep_rounds times. Slower, but finds far more facts.
+    deep_rounds: 2
+    deep_min_chars: 600
+
+  # On-chain checkpoints: "!walden save" publishes the room's memory as one checkpoint,
+  # after showing an overview and waiting for "yes". During conversation memory stays local.
+  checkpoint:
+    enabled: true
+    # memwal: one memory of Walden's Walrus Memory agent account (mainnet relayer pays storage).
+    # walrus: plain Walrus blob via the walrus CLI (settings below; public header, Sui tags).
+    backend: memwal
+    auto_save: true            # mirror each room's memory to Walrus Memory when a session ends (only if it changed)
+    memwal_key: env:MEMWAL_PRIVATE_KEY
+    memwal_account_id: env:MEMWAL_ACCOUNT_ID
+    memwal_env: prod           # prod = mainnet relayer, staging = testnet relayer
+    memwal_namespace: walden   # one namespace per room: walden-<room>
+    # --- walrus backend only ---
+    context: testnet           # Walrus network (testnet | mainnet). Mainnet spends real WAL/SUI.
+    sui_env: testnet           # Sui environment used to show the wallet balance
+    epochs: 5                  # storage duration; testnet epochs are 1 day, mainnet 14 days
+    deploy_users: []           # who may deploy; empty = room moderators (power level >= 50)
+    confirm_timeout_seconds: 300
+    set_attributes: true       # tag the blob's Sui object with walden.* attributes
+    explorer_blob_url: https://walruscan.com/testnet/blob/{blob_id}
+    aggregator_url: https://aggregator.walrus-testnet.walrus.space/v1/blobs/{blob_id}
+    explorer_object_url: https://suiscan.xyz/testnet/object/{object_id}
+
+recall:
+  enabled: true
+  max_person_lineage_items: 3
+  max_room_lineage_items: 3
+  max_semantic_items: 6
+  max_context_chars: 24000   # over this, the facts most relevant to the question are kept (not just the first ones)
+
+api:
+  enabled: false
+  host: 127.0.0.1
+  port: 8787
+  bearer_token: env:WALDEN_API_TOKEN
+
+# "!walden archive <room> <password> [hours]": archive a whole room into Walrus Memory (episodes,
+# participants, overview) plus its files as plain Walrus blobs. Opt-in: only people who reply
+# "!walden include" during the notice period are archived.
+archive:
+  enabled: true
+  require_moderator: false   # true: only moderators may archive. Either way you must be a member of the room.
+  notice_hours: 24           # how long people have to reply "!walden include"
+  walrus_context: mainnet    # files are paid in WAL by the walrus CLI wallet (shown before "yes")
+  sui_env: mainnet
+  epochs: 53                 # ~2 years on mainnet
+  max_file_mb: 50
+  episode_max_messages: 80
+  episode_max_chars: 12000   # one episode incl. transcript is one Walrus Memory memory (~25 KB); the relayer
+                             # failed to upload ~60 KB ones ("exceeded step budget")
+  episode_gap_hours: 6
