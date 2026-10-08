@@ -16,4 +16,3 @@ __pycache__/
 *.egg-info/
 # Move build output
 move/*/build/
-.github/
