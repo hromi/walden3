@@ -10,7 +10,7 @@ Deadline: **9 October 2026, 14:00 UTC**. Form: <https://airtable.com/appoDAKpC74
 | Chatbot description | Walden3 is a Matrix chatbot for groups that talk over weeks and months (classes, research groups, communities). It remembers people room by room: it learns facts from what people say, each with who said it, when and where, keeps episode summaries of every conversation, and mirrors each room's memory to Walrus Memory on Sui mainnet as encrypted, hash-chained, verifiable checkpoints that can be loaded into other rooms. Whole rooms can be archived with per-person opt-in. It solves the two problems of chatbot memory in groups: bots that forget (or invent) what people told them, and memory locked in a vendor's database. Runs on a local open-weight model, so no conversation goes to a model provider. |
 | Primary contact | Daniel D. Hromada, d@udk.ai |
 | GitHub account | hromi |
-| Public repository | `https://github.com/hromi/walden3` *(after publishing)* |
+| Public repository | <https://github.com/hromi/walden3> |
 | LLM | **IBM Granite 4.0 H-Small** (`granite4:small-h`, 32B hybrid Mamba-2/transformer MoE, 9B active), open weights, **self-hosted via Ollama** on an NVIDIA A40. Category: *Beyond the Big Two*. |
 | Channel / live link | Matrix: invite `@walden:udk.ai` (display name walden3) into any room, or join the public demo room *(add its matrix.to link)* |
 | Walrus Memory agent ID | `0x1979de15948d9fb7994ec9a78e313e7a454818050e2853142e81f13c73282094` |
@@ -55,11 +55,11 @@ Title: *A local Granite 4.0 chatbot that remembers people, with its memory on de
 >
 > Most of the work was getting a small model to write memory reliably: one section per person with a strict JSON schema (Ollama enforces it), reading long messages in ~800-character parts, asking "which facts are still missing?" until the answer is empty, and catching duplicates and pronoun mix-ups in code. A 3,756-character self-description went from 2 extracted facts to 14.
 >
-> Write-up with before/after and code: <article link>. Source: <repo link>.
+> Write-up with before/after and code: <article link>. Source: https://github.com/hromi/walden3.
 
 ## Your checklist
 
-- [ ] Publish the GitHub repository (I can do it with `gh` once you say so)
+- [x] Publish the GitHub repository: https://github.com/hromi/walden3
 - [ ] Publish the article on Medium (paste `docs/ARTICLE.html`, add 1–2 real Element screenshots), put the repo link in it
 - [ ] Register on DeepSurge and submit the Airtable form (fields above)
 - [ ] Walrus Memory feedback form; GitHub issues at MemWal

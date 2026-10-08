@@ -163,8 +163,8 @@ Before memory, Walden3 was polite and generic, and when asked about you, it gues
 
 ## Try it, or build your own
 
-- Code, setup and all commands: **GitHub: `<repository link>`**
-- The design, in depth (bitemporal memory graphs on Sui and Walrus): the [whitepaper](research/walrus_memory_graphs.pdf)
+- Code, setup and all commands: **GitHub: <https://github.com/hromi/walden3>**
+- The design, in depth (bitemporal memory graphs on Sui and Walrus): the [whitepaper](https://github.com/hromi/walden3/blob/main/docs/research/walrus_memory_graphs.pdf)
 - Walrus Memory docs: [docs.wal.app/walrus-memory](https://docs.wal.app/walrus-memory/)
 
 If you build a chatbot for a group of people, give it a memory, but give the people a say in it: let them see it, correct it, and decide what becomes permanent. Walrus Memory makes the "permanent and verifiable" part straightforward; the rest is up to us.

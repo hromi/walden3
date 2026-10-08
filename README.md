@@ -67,7 +67,7 @@ You need: Linux with Python 3.11+, a GPU for the model (Granite 4.0 H-Small need
 ### 1. Install
 
 ```bash
-git clone <this repository> walden3 && cd walden3
+git clone https://github.com/hromi/walden3 && cd walden3
 python -m venv .venv && . .venv/bin/activate
 pip install -e '.[all,dev]'
 pytest -q                     # 110+ tests, no network needed
