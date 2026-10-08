@@ -1,0 +1,22 @@
+[Unit]
+Description=Walden3 Matrix bot
+Requires=walden-ollama.service
+After=walden-ollama.service
+
+[Service]
+WorkingDirectory=/path/to/walden3
+EnvironmentFile=/path/to/walden3/.env
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin PYTHONUNBUFFERED=1
+# Wait for the model server (and, after a reboot, for the network) before logging in to Matrix.
+ExecStartPre=/bin/sh -c 'for i in $(seq 180); do curl -sf -m2 http://127.0.0.1:11435/api/version >/dev/null && exit 0; sleep 1; done; exit 1'
+ExecStart=/path/to/walden3/.venv/bin/walden -c config.yaml matrix
+# Ctrl-C, like in tmux: open sessions are saved (and mirrored) before exit.
+KillSignal=SIGINT
+TimeoutStopSec=300
+Restart=always
+RestartSec=15
+StandardOutput=append:/path/to/walden3/logs/walden.log
+StandardError=inherit
+
+[Install]
+WantedBy=default.target

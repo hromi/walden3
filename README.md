@@ -123,7 +123,22 @@ set -a; . ./.env; set +a
 walden -c config.yaml matrix
 ```
 
-Invite the bot into a room and write `@walden3 hello`. `start-walden.sh` runs Ollama and the bot in tmux.
+Invite the bot into a room and write `@walden3 hello`.
+
+### 6. Run it as a service (starts at boot, restarts after crashes)
+
+[`deploy/systemd/`](deploy/systemd) has two systemd **user** units: `walden-ollama.service` (Ollama on port 11435) and `walden.service` (the bot; it waits for the model, reads `.env`, stops with SIGINT so open sessions are saved, and restarts 15 s after a crash). Replace `/path/to/walden3` with your checkout, then:
+
+```bash
+cp deploy/systemd/*.service ~/.config/systemd/user/
+loginctl enable-linger "$USER"          # start user services at boot, without logging in
+systemctl --user daemon-reload
+systemctl --user enable --now walden-ollama.service walden.service
+systemctl --user restart walden         # after changing code or config
+journalctl --user -u walden -f          # or: tail -f logs/walden.log
+```
+
+`start-walden.sh` is the older way (tmux); do not run both.
 
 ## Repository map
 

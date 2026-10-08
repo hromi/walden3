@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# SUPERSEDED: Walden now runs as systemd user services (deploy/systemd/, see README section 6).
+# Do not run this while walden.service / walden-ollama.service are active: both use port 11435.
 # Starts the Walden deployment in tmux session "walden":
 #   window 0 "ollama" - dedicated Ollama (port 11435) serving granite4:small-h (and any other model Walden asks for)
 #   window 1 "bot"    - Walden Matrix bot

@@ -1,0 +1,13 @@
+[Unit]
+Description=Ollama for Walden (127.0.0.1:11435, granite4:small-h)
+
+[Service]
+Environment=CUDA_VISIBLE_DEVICES=0 OLLAMA_HOST=127.0.0.1:11435 OLLAMA_MODELS=%h/.ollama/models OLLAMA_KEEP_ALIVE=24h OLLAMA_MAX_QUEUE=16
+ExecStart=%h/.local/ollama/bin/ollama serve
+Restart=always
+RestartSec=5
+StandardOutput=append:/path/to/walden3/logs/ollama.log
+StandardError=inherit
+
+[Install]
+WantedBy=default.target
