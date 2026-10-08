@@ -1,5 +1,7 @@
 # Walden3
 
+[![ci](https://github.com/hromi/walden3/actions/workflows/ci.yml/badge.svg)](https://github.com/hromi/walden3/actions/workflows/ci.yml)
+
 **Walden3 is a Matrix chatbot that remembers people, and whose memory lives on Walrus.** It takes part in group rooms, learns facts from what people say (each with who said it, when, and in which room), keeps an episode summary of every conversation, and mirrors each room's memory to **Walrus Memory on Sui mainnet**. That memory can be verified, carried into another room, or turned into a permanent, consent-based archive of a whole conversation.
 
 It runs on a **local open-weight model** (IBM Granite 4.0 H-Small via Ollama), so no conversation is sent to a model provider.
