@@ -1,0 +1,15 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      # all: matrix-nio (E2EE) and the Walrus Memory SDK, which the tests import; no network or keys needed
+      - run: pip install -e '.[all,dev]'
+      - run: python -m compileall -q walden
+      - run: pytest -q
