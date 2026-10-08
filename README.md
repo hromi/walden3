@@ -10,7 +10,7 @@ It runs on a **local open-weight model** (IBM Granite 4.0 H-Small via Ollama), s
 
 | | |
 |---|---|
-| Channel | Matrix (any client, e.g. Element); invite `@walden:udk.ai`, display name **walden3** |
+| Channel | Matrix (any client, e.g. Element): public demo room [`#walden3-demo:udk.ai`](https://matrix.to/#/#walden3-demo:udk.ai), or invite `@walden:udk.ai` (display name **walden3**) into your own room |
 | LLM / runtime | **IBM Granite 4.0 H-Small** (`granite4:small-h`, 32B hybrid Mamba MoE, 9B active) on **Ollama**, local GPU |
 | Walrus Memory agent (account) ID | `0x1979de15948d9fb7994ec9a78e313e7a454818050e2853142e81f13c73282094` (mainnet) |
 | Files of archived rooms | plain Walrus blobs on mainnet |

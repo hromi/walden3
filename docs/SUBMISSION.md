@@ -12,7 +12,7 @@ Deadline: **9 October 2026, 14:00 UTC**. Form: <https://airtable.com/appoDAKpC74
 | GitHub account | hromi |
 | Public repository | <https://github.com/hromi/walden3> |
 | LLM | **IBM Granite 4.0 H-Small** (`granite4:small-h`, 32B hybrid Mamba-2/transformer MoE, 9B active), open weights, **self-hosted via Ollama** on an NVIDIA A40. Category: *Beyond the Big Two*. |
-| Channel / live link | Matrix: invite `@walden:udk.ai` (display name walden3) into any room, or join the public demo room *(add its matrix.to link)* |
+| Channel / live link | Matrix, public demo room: <https://matrix.to/#/#walden3-demo:udk.ai> (judges' account `@walrus-jury:udk.ai`, moderator there; give the password only in the form, never in the repo). Or invite `@walden:udk.ai` into any room. |
 | Walrus Memory agent ID | `0x1979de15948d9fb7994ec9a78e313e7a454818050e2853142e81f13c73282094` |
 | Blob count | **39** on 8 Oct 2026, 22:00 UTC (re-check before submitting: see below) |
 | Dedicated wallet created for Sessions | `0xbe54a8cf260e068dea6c4ce23e91c430af6cbd10791289e0c2d9e64b359473d5` (owner of the Walrus Memory account, created for this hackathon) |
@@ -66,4 +66,4 @@ Title: *A local Granite 4.0 chatbot that remembers people, with its memory on de
 - [ ] Join the Walrus Discord
 - [ ] Post on X under the session announcement, tagging @WalrusProtocol with #WalrusMemory
 - [ ] Promo post in a third-party community (e.g. r/LocalLLaMA)
-- [ ] Optional: a public demo room for the judges (`!walden` works there for everyone)
+- [x] Public demo room for the judges: https://matrix.to/#/#walden3-demo:udk.ai
